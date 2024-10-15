@@ -338,9 +338,6 @@ OUTPUT_DIR = ./dist
 $(OUTPUT_DIR):
 #
 	@$(CMD_MKDIR) -p $@
-	$(CMD_MKDIR) -p $@/libbpf
-	$(CMD_MKDIR) -p $@/libbpf/obj
-
 #
 # embedded btfhub
 #
@@ -449,8 +446,8 @@ TRACEE_SRC_DIRS = ./cmd/ ./pkg/ ./signatures/
 TRACEE_SRC = $(shell find $(TRACEE_SRC_DIRS) -type f -name '*.go' ! -name '*_test.go')
 GO_TAGS_EBPF = core,ebpf
 CGO_EXT_LDFLAGS_EBPF =
-CUSTOM_CGO_CFLAGS = "-I$(abspath $(OUTPUT_DIR)/libbpf) -I$(LIBBPF_INCLUDE_UAPI)"
-PKG_CONFIG_PATH = $(LIBBPF_OBJDIR)
+CUSTOM_CGO_CFLAGS = ""
+CUSTOM_CGO_LDFLAGS = "$(shell $(call pkg_config, $(LIB_BPF))) $(shell $(call pkg_config, $(LIB_ELF))) $(shell $(call pkg_config, $(LIB_ZLIB)))"PKG_CONFIG_PATH = $(LIBBPF_OBJDIR)
 PKG_CONFIG_FLAG =
 
 TRACEE_PROTOS = ./api/v1beta1/*.proto
